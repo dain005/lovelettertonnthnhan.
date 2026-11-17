@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Một điều anh muốn nói</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Nunito+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root {
+            --midnight: #0d1020;
+            --midnight-soft: #17182b;
+
+            --purple-dark: #40374f;
+            --purple: #756783;
+            --lavender: #a69bb4;
+
+            --smoke: rgba(220, 215, 225, 0.12);
+            --smoke-border: rgba(235, 230, 240, 0.18);
+
+            --cream: #eee9df;
+            --cream-soft: rgba(238, 233, 223, 0.72);
+
+            --white: #ffffff;
+
+            --shadow:
+                0 20px 80px rgba(0, 0, 0, 0.28);
+        }
+
+
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at 20% 20%,
+                    rgba(117, 103, 131, 0.15),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 80% 70%,
+                    rgba(80, 100, 130, 0.12),
+                    transparent 40%
+                ),
+                linear-gradient(
+                    135deg,
+                    #0b0e1a 0%,
+                    #141526 48%,
+                    #101827 100%
+                );
+
+            color: var(--cream);
+
+            font-family:
+                "Nunito Sans",
+                sans-serif;
+
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: rgba(166, 155, 180, 0.35);
+            color: white;
+        }
+
+
+        #particleCanvas {
+            position: fixed;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            pointer-events: none;
+
+            z-index: 0;
+
+            opacity: 0.75;
+        }
+
+        .intro {
+            position: fixed;
+            inset: 0;
+
+            z-index: 999;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 25px;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(67, 56, 83, 0.25),
+                    rgba(7, 9, 17, 0.97) 70%
+                );
+
+            backdrop-filter: blur(20px);
+
+            transition:
+                opacity 1.2s ease,
+                visibility 1.2s ease;
+        }
+
+        .intro.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .intro-box {
+            width: min(520px, 100%);
+
+            text-align: center;
+
+            padding: 55px 35px;
+
+            background:
+                rgba(255, 255, 255, 0.055);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.13);
+
+            border-radius: 28px;
+
+            backdrop-filter: blur(25px);
+
+            box-shadow:
+                0 30px 100px rgba(0, 0, 0, 0.35);
+        }
+
+        .intro-small {
+            font-size: 11px;
+
+            letter-spacing: 5px;
+
+            text-transform: uppercase;
+
+            color:
+                rgba(238, 233, 223, 0.45);
+
+            margin-bottom: 30px;
+        }
+
+        .intro-title {
+            font-family:
+                "Cormorant Garamond",
+                serif;
+
+            font-size: clamp(38px, 8vw, 62px);
+
+            font-weight: 500;
+
+            line-height: 1;
+
+            color: var(--cream);
+
+            margin-bottom: 24px;
+        }
+
+        .intro-text {
+            font-size: 14px;
+
+            line-height: 2;
+
+            color:
+                rgba(238, 233, 223, 0.63);
+
+            margin-bottom: 35px;
+        }
+
+        .start-btn {
+            border: 1px solid rgba(238, 233, 223, 0.25);
+
+            background:
+                rgba(166, 155, 180, 0.12);
+
+            color: var(--cream);
+
+            padding: 14px 30px;
+
+            border-radius: 999px;
+
+            font-family:
+                "Nunito Sans",
+                sans-serif;
+
+            font-size: 12px;
+
+            letter-spacing: 2px;
+
+            cursor: pointer;
+
+            transition:
+                0.4s ease;
+        }
+
+        .start-btn:hover {
+            background:
+                rgba(166, 155, 180, 0.25);
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 10px 35px rgba(120, 105, 140, 0.15);
+        }
+
+
+        
+        .music-control {
+            position: fixed;
+
+            right: 22px;
+            bottom: 22px;
+
+            z-index: 100;
+
+            width: 45px;
+            height: 45px;
+
+            border-radius: 50%;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.15);
+
+            background:
+                rgba(15, 16, 30, 0.55);
+
+            backdrop-filter: blur(15px);
+
+            color: var(--cream);
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 15px;
+
+            transition: 0.3s ease;
+        }
+
+        .music-control:hover {
+            transform: scale(1.05);
+
+            background:
+                rgba(117, 103, 131, 0.35);
+        }
+
+        .music-control.playing {
+            box-shadow:
+                0 0 0 6px rgba(166, 155, 180, 0.05);
+        }
+
+
+        main {
+            position: relative;
+
+            z-index: 1;
+        }
+
+
+        .hero {
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 100px 25px;
+
+            text-align: center;
+
+            position: relative;
+        }
+
+        .hero-inner {
+            width: min(850px, 100%);
+        }
+
+        .eyebrow {
+            font-size: 11px;
+
+            letter-spacing: 5px;
+
+            text-transform: uppercase;
+
+            color:
+                rgba(238, 233, 223, 0.4);
+
+            margin-bottom: 28px;
+        }
+
+        .hero h1 {
+            font-family:
+                "Cormorant Garamond",
+                serif;
+
+            font-size:
+                clamp(65px, 13vw, 145px);
+
+            font-weight: 500;
+
+            line-height: 0.8;
+
+            letter-spacing: -3px;
+
+            color: var(--cream);
+
+            text-shadow:
+                0 10px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .hero-subtitle {
+            margin-top: 40px;
+
+            font-family:
+                "Cormorant Garamond",
+                serif;
+
+            font-size:
+                clamp(20px, 4vw, 29px);
+
+            font-style: italic;
+
+            color:
+                rgba(238, 233, 223, 0.57);
+        }
+
+        .scroll-hint {
+            position: absolute;
+
+            bottom: 35px;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            color:
+                rgba(238, 233, 223, 0.3);
+
+            font-size: 10px;
+
+            letter-spacing: 3px;
+
+            text-transform: uppercase;
+
+            animation:
+                float 2.5s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform:
+                    translate(-50%, 0);
+            }
+
+            50% {
+                transform:
+                    translate(-50%, -8px);
+            }
+        }
+
+
+        .chapter {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+
+            padding:
+                120px 20px;
+        }
+
+        .chapter-inner {
+            width: min(820px, 100%);
+
+            margin: auto;
+        }
+
+
+
+        .glass-card {
+            position: relative;
+
+            padding:
+                clamp(35px, 7vw, 75px);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.075),
+                    rgba(255, 255, 255, 0.025)
+                );
+
+            border:
+                1px solid var(--smoke-border);
+
+            border-radius: 30px;
+
+            backdrop-filter:
+                blur(22px);
+
+            -webkit-backdrop-filter:
+                blur(22px);
+
+            box-shadow:
+                var(--shadow);
+
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: "";
+
+            position: absolute;
+
+            width: 250px;
+            height: 250px;
+
+            top: -150px;
+            right: -120px;
+
+            background:
+                rgba(166, 155, 180, 0.09);
+
+            border-radius: 50%;
+
+            filter: blur(30px);
+
+            pointer-events: none;
+        }
+
+        .chapter-number {
+            font-family:
+                "Cormorant Garamond",
+                serif;
+
+            font-size: 22px;
+
+            color:
+                rgba(166, 155, 180, 0.6);
+
+            margin-bottom: 10px;
+        }
+
+        .chapter-title {
+            font-family:
+                "Cormorant Garamond",
+                serif;
+
+            font-size:
+                clamp(42px, 8vw, 68px);
+
+            font-weight: 500;
+
+            line-height: 0.95;
+
+            color: var(--cream);
+
+            margin-bottom: 45px;
+        }
+
+        .chapter-title span {
+            display: block;
+
+            color:
+                rgba(166, 155, 180, 0.68);
+
+            font-style: italic;
+        }
+
+        .letter {
+            color:
+                rgba(238, 233, 223, 0.72);
+
+            font-size:
+                clamp(14px, 2vw, 16px);
+
+            line-height: 2.05;
+
+            font-weight: 300;
+        }
+
+        .letter p {
+            margin-bottom: 24px;
+        }
+
+        .letter strong {
+            color:
+                rgba(238, 233, 223, 0.92);
+
+            font-weight: 500;
+        }
+
+        .signature {
+            margin-top: 45px;
+
+            font-family:
+                "Cormorant Garamond",
+                serif;
+
+            font-size: 25px;
+
+            font-style: italic;
+
+            color:
+                rgba(238, 233, 223, 0.6);
+        }
+
+
+
+        .divider {
+            width: 60px;
+
+            height: 1px;
+
+            margin: 0 auto;
+
+            background:
+                rgba(166, 155, 180, 0.35);
+        }
+
+
+        .final-card {
+            text-align: center;
+        }
+
+        .final-card .chapter-title {
+            margin-bottom: 30px;
+        }
+
+        .final-message {
+            max-width: 600px;
+
+            margin:
+                0 auto 35px;
+
+            font-family:
+                "Cormorant Garamond",
+                serif;
+
+            font-size:
+                clamp(20px, 4vw, 28px);
+
+            line-height: 1.65;
+
+            font-style: italic;
+
+            color:
+                rgba(238, 233, 223, 0.67);
+        }
+
+
+        .hug-btn {
+            border:
+                1px solid rgba(166, 155, 180, 0.35);
+
+            background:
+                rgba(166, 155, 180, 0.08);
+
+            color: var(--cream);
+
+            padding:
+                14px 28px;
+
+            border-radius: 999px;
+
+            cursor: pointer;
+
+            font-family:
+                "Nunito Sans",
+                sans-serif;
+
+            font-size: 12px;
+
+            letter-spacing: 1.5px;
+
+            transition:
+                all 0.4s ease;
+        }
+
+        .hug-btn:hover {
+            background:
+                rgba(166, 155, 180, 0.2);
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        .hug-message {
+            opacity: 0;
+
+            transform:
+                translateY(10px);
+
+            max-height: 0;
+
+            overflow: hidden;
+
+            transition:
+                0.7s ease;
+        }
+
+        .hug-message.show {
+            opacity: 1;
+
+            transform:
+                translateY(0);
+
+            max-height: 150px;
+
+            margin-top: 30px;
+        }
+
+        .hug-heart {
+            font-size: 32px;
+
+            margin-bottom: 10px;
+
+            animation:
+                heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        .hug-text {
+            font-family:
+                "Cormorant Garamond",
+                serif;
+
+            font-size: 20px;
+
+            font-style: italic;
+
+            color:
+                rgba(238, 233, 223, 0.62);
+        }
+
+
+        footer {
+            text-align: center;
+
+            padding:
+                80px 20px 120px;
+
+            color:
+                rgba(238, 233, 223, 0.25);
+
+            font-size: 10px;
+
+            letter-spacing: 3px;
+
+            text-transform: uppercase;
+        }
+
+
+        .reveal {
+            opacity: 0;
+
+            transform:
+                translateY(35px);
+
+            transition:
+                opacity 1.2s ease,
+                transform 1.2s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+
+            transform:
+                translateY(0);
+        }
+
+
+
+        @media (max-width: 600px) {
+
+            .intro-box {
+                padding:
+                    45px 25px;
+            }
+
+            .intro-title {
+                font-size: 48px;
+            }
+
+            .hero {
+                padding:
+                    80px 20px;
+            }
+
+            .hero h1 {
+                font-size:
+                    clamp(65px, 22vw, 100px);
+
+                letter-spacing: -2px;
+            }
+
+            .chapter {
+                min-height: auto;
+
+                padding:
+                    70px 15px;
+            }
+
+            .glass-card {
+                padding:
+                    35px 25px;
+
+                border-radius: 24px;
+            }
+
+            .chapter-title {
+                font-size: 49px;
+
+                margin-bottom: 35px;
+            }
+
+            .letter {
+                font-size: 14px;
+
+                line-height: 1.95;
+            }
+
+            .music-control {
+                right: 15px;
+                bottom: 15px;
+
+                width: 42px;
+                height: 42px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<canvas id="particleCanvas"></canvas>
+
+
+
+<div class="intro" id="intro">
+
+    <div class="intro-box">
+
+        <div class="intro-small">
+            Một vài điều chưa kịp nói
+        </div>
+
+        <h1 class="intro-title">
+            Gửi em
+        </h1>
+
+        <!-- ✏️ SỬA NỘI DUNG -->
+        <p class="intro-text">
+            Có những điều khi còn ở bên nhau,
+            anh đã không biết phải nói thế nào.
+            <br>
+            Nên lần này, anh muốn chậm lại một chút.
+            <br><br>
+            Nếu em muốn, hãy đeo tai nghe
+            và ở lại đây vài phút nhé.
+        </p>
+
+        <button class="start-btn" id="startBtn">
+            Mở lá thư
+        </button>
+
+    </div>
+
+</div>
+
+
+<audio id="bg-music" loop>
+    <source src="pha-le-tim.mp3" type="audio/mpeg">
+
+    Trình duyệt của bạn không hỗ trợ audio.
+</audio>
+
+
+
+<button
+    class="music-control"
+    id="musicControl"
+    title="Bật / tắt nhạc">
+
+    ♫
+
+</button>
+
+
+<main>
+
+
+
+    <section class="hero">
+
+        <div class="hero-inner reveal">
+
+            <div class="eyebrow">
+                Một lá thư không cần hồi đáp
+            </div>
+
+            <h1>
+                Gửi em
+            </h1>
+
+            <p class="hero-subtitle">
+                từ một người vẫn còn vài điều muốn nói
+            </p>
+
+        </div>
+
+        <div class="scroll-hint">
+            cuộn xuống
+        </div>
+
+    </section>
+
+
+
+    <section class="chapter">
+
+        <div class="chapter-inner">
+
+            <div class="glass-card reveal">
+
+                <div class="chapter-number">
+                    I
+                </div>
+
+                <h2 class="chapter-title">
+                    Có những điều
+                    <span>khó nói thành lời</span>
+                </h2>
+
+
+                <div class="letter">
+
+
+                    <p>
+                        Nhàn à,
+                    </p>
+
+                    <p>
+                        Anh đã nghĩ khá lâu trước khi viết những dòng này.
+                        Không phải vì anh không còn điều gì để nói,
+                        mà ngược lại, có quá nhiều điều anh từng muốn nói
+                        nhưng lúc đó lại không biết phải nói như thế nào.
+                    </p>
+
+                    <p>
+                        Có những chuyện khi đang ở trong đó,
+                        người ta thường nghĩ rằng mình còn rất nhiều thời gian
+                        để giải thích, để sửa sai, để nói một câu thật lòng.
+                        Nhưng rồi đến khi mọi thứ đã đi qua,
+                        anh mới nhận ra có những lời nếu không nói đúng lúc
+                        thì sau này có nói bao nhiêu cũng không thể trở về
+                        đúng khoảnh khắc ban đầu.
+                    </p>
+
+                    <p>
+                        Nên lá thư này không phải để làm em khó xử,
+                        cũng không phải để mong em phải trả lời điều gì.
+                        Anh chỉ muốn một lần được ngồi xuống,
+                        thật bình tĩnh, nhìn lại tất cả
+                        và nói với em những điều mà trước đây
+                        anh đã không đủ trưởng thành để nói.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <section class="chapter">
+
+        <div class="chapter-inner">
+
+            <div class="glass-card reveal">
+
+                <div class="chapter-number">
+                    II
+                </div>
+
+                <h2 class="chapter-title">
+                    Anh xin lỗi
+                    <span>vì những điều anh đã làm</span>
+                </h2>
+
+
+                <div class="letter">
+
+                    <!-- ✏️ SỬA NỘI DUNG CHƯƠNG 2 -->
+
+                    <p>
+                        Điều đầu tiên anh muốn nói,
+                        có lẽ cũng là điều anh nợ em nhiều nhất:
+                        <strong>anh xin lỗi.</strong>
+                    </p>
+
+                    <p>
+                        Anh xin lỗi vì đã có những lúc không biết kiềm chế
+                        những cảm xúc tiêu cực của chính mình.
+                        Thay vì tự nhìn lại và tự giải quyết những điều
+                        đang xảy ra bên trong anh,
+                        anh lại vô tình mang chúng đến trước mặt em.
+                    </p>
+
+                    <p>
+                        Có những lúc anh mệt, anh buồn, anh khó chịu,
+                        nhưng cách anh thể hiện lại khiến em cũng phải mệt theo.
+                        Anh đã để những cảm xúc vốn thuộc về anh
+                        trở thành áp lực mà em phải chịu.
+                    </p>
+
+                    <p>
+                        Anh nghĩ lại và nhận ra điều đó thật không công bằng với em.
+                        Em không có nghĩa vụ phải chịu đựng
+                        những phần tiêu cực nhất của anh chỉ vì em thương anh.
+                    </p>
+
+                    <p>
+                        Điều khiến anh tiếc nhất không phải chỉ là những lần
+                        mình đã cãi nhau hay làm nhau buồn.
+                        Mà là việc lúc đó anh đã không đủ tỉnh táo
+                        để nhận ra rằng phía bên kia những lời nói của mình
+                        là một người cũng có cảm xúc,
+                        cũng biết mệt,
+                        cũng có những lúc chỉ cần được nhẹ nhàng một chút.
+                    </p>
+
+                    <p>
+                        Anh không muốn lấy lý do rằng lúc đó anh cũng đang khó chịu
+                        hay anh cũng có những vấn đề riêng để biện minh.
+                        Vì cuối cùng, những gì em cảm nhận được vẫn là những gì
+                        anh đã gây ra cho em.
+                    </p>
+
+                    <p>
+                        Anh xin lỗi.
+                        Không phải một lời xin lỗi để mong mọi chuyện lập tức trở lại,
+                        mà là một lời xin lỗi vì anh thật sự hiểu rằng
+                        mình đã từng làm tổn thương một người mà mình rất thương.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="chapter">
+
+        <div class="chapter-inner">
+
+            <div class="glass-card reveal">
+
+                <div class="chapter-number">
+                    III
+                </div>
+
+                <h2 class="chapter-title">
+                    Cảm ơn em
+                    <span>vì đã từng ở lại</span>
+                </h2>
+
+
+                <div class="letter">
+
+                    <!-- ✏️ SỬA NỘI DUNG CHƯƠNG 3 -->
+
+                    <p>
+                        Nhưng nếu chỉ nói lời xin lỗi thì hình như vẫn chưa đủ.
+                        Vì giữa tất cả những điều anh làm chưa tốt,
+                        em cũng đã dành cho anh rất nhiều điều đẹp đẽ.
+                    </p>
+
+                    <p>
+                        Anh cảm ơn em vì những lần em dịu dàng với anh
+                        ngay cả khi anh không thật sự dễ chịu.
+                        Cảm ơn em vì những lần em quan tâm,
+                        hỏi han, chăm sóc,
+                        và cố gắng hiểu anh dù đôi khi chính anh
+                        còn chẳng hiểu nổi mình.
+                    </p>
+
+                    <p>
+                        Có thể ngày đó anh đã quen với việc có em bên cạnh
+                        đến mức vô tình xem những điều ấy là bình thường.
+                        Nhưng bây giờ khi nhìn lại,
+                        anh mới hiểu rằng sự dịu dàng của một người
+                        chưa bao giờ là điều hiển nhiên.
+                    </p>
+
+                    <p>
+                        Em đã từng dành cho anh rất nhiều sự bao dung.
+                        Và anh biết có những sự bao dung
+                        đáng lẽ anh phải biết trân trọng sớm hơn.
+                    </p>
+
+                    <p>
+                        Anh không biết sau này chúng ta sẽ trở thành gì
+                        trong ký ức của nhau.
+                        Có thể là một người từng rất quan trọng,
+                        có thể là một đoạn ký ức lâu lâu mới nhớ tới,
+                        hoặc đơn giản chỉ là hai người từng đi cùng nhau
+                        qua một khoảng thời gian rất đẹp.
+                    </p>
+
+                    <p>
+                        Nhưng có một điều anh nghĩ mình có thể nói
+                        mà không cần phải suy nghĩ quá nhiều:
+                        <strong>
+                            anh vẫn rất thương em.
+                        </strong>
+                    </p>
+
+                    <p>
+                        Và nếu phải nói thật lòng hơn nữa,
+                        thì anh vẫn yêu em.
+                        Không phải kiểu tình cảm muốn giữ lấy một người
+                        bằng mọi giá,
+                        mà là thứ tình cảm khiến anh thật sự mong
+                        người mình từng thương sẽ luôn được bình yên,
+                        dù sau này người đó có còn đi cạnh mình hay không.
+                    </p>
+
+                    <p>
+                        Có lẽ đó là điều trưởng thành nhất
+                        mà anh học được sau tất cả những chuyện đã xảy ra.
+                    </p>
+
+                </div>
+
+
+                <div class="signature">
+                    Cảm ơn em, vì đã từng là một phần rất đẹp trong cuộc đời anh.
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+
+    <section class="chapter">
+
+        <div class="chapter-inner">
+
+            <div class="glass-card final-card reveal">
+
+                <div class="chapter-number">
+                    IV
+                </div>
+
+                <h2 class="chapter-title">
+                    Cuối cùng,
+                    <span>anh chỉ mong em bình yên</span>
+                </h2>
+
+
+                <div class="letter">
+
+              
+
+                    <p>
+                        Anh không biết em sẽ nghĩ gì sau khi đọc hết những dòng này.
+                        Và thật lòng, lần này anh cũng không muốn đặt lên em
+                        bất kỳ áp lực nào.
+                    </p>
+
+                    <p>
+                        Em không cần phải trả lời.
+                        Không cần phải nói rằng em tha thứ.
+                        Cũng không cần phải quay lại.
+                    </p>
+
+                    <p>
+                        Anh chỉ muốn em biết rằng
+                        anh đã nhìn lại,
+                        đã hiểu hơn về những gì mình từng làm,
+                        và đã thật sự biết ơn vì những gì em từng dành cho anh.
+                    </p>
+
+                </div>
+
+
+                <div class="divider"></div>
+
+
+                <p class="final-message">
+
+                    "Nếu một ngày nào đó em vô tình nhớ về anh,
+                    anh mong ký ức đó không còn khiến em buồn nữa."
+
+                </p>
+
+
+
+                <button class="hug-btn" id="hugBtn">
+                    Gửi một cái ôm từ xa
+                </button>
+
+
+                <div class="hug-message" id="hugMessage">
+
+                    <div class="hug-heart">
+                        ♡
+                    </div>
+
+                    <div class="hug-text">
+                        Cái ôm này không cần em phải nhận.
+                        Anh chỉ gửi nó đến,
+                        để em biết rằng ở đâu đó vẫn có một người
+                        mong em luôn bình yên.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+
+
+<footer>
+
+    <!-- ✏️ SỬA NỘI DUNG -->
+
+    Made with a quiet heart · 2026
+
+</footer>
+
+
+
+<script>
+
+
+    const intro = document.getElementById("intro");
+    const startBtn = document.getElementById("startBtn");
+
+    const music = document.getElementById("bg-music");
+    const musicControl = document.getElementById("musicControl");
+
+    const hugBtn = document.getElementById("hugBtn");
+    const hugMessage = document.getElementById("hugMessage");
+
+
+    startBtn.addEventListener("click", async () => {
+
+        try {
+            await music.play();
+
+            musicControl.classList.add("playing");
+
+        } catch (error) {
+
+            console.log("Không thể phát nhạc:", error);
+
+        }
+
+        intro.classList.add("hidden");
+    });
+
+
+
+
+    musicControl.addEventListener("click", async () => {
+
+        if (music.paused) {
+
+            try {
+
+                await music.play();
+
+                musicControl.classList.add("playing");
+
+            } catch (error) {
+
+                console.log("Không thể phát nhạc:", error);
+
+            }
+
+        } else {
+
+            music.pause();
+
+            musicControl.classList.remove("playing");
+        }
+
+    });
+
+
+    hugBtn.addEventListener("click", () => {
+
+        hugMessage.classList.toggle("show");
+
+        if (hugMessage.classList.contains("show")) {
+
+            hugBtn.textContent = "♡ Đã gửi một cái ôm";
+
+            createHeartBurst();
+
+        } else {
+
+            hugBtn.textContent = "Gửi một cái ôm từ xa";
+
+        }
+
+    });
+
+
+
+
+
+    const revealElements =
+        document.querySelectorAll(".reveal");
+
+
+    const observer =
+        new IntersectionObserver(
+            (entries) => {
+
+                entries.forEach(entry => {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.classList.add("visible");
+
+                    }
+
+                });
+
+            },
+            {
+                threshold: 0.15
+            }
+        );
+
+
+    revealElements.forEach(element => {
+
+        observer.observe(element);
+
+    });
+
+
+
+
+    const canvas =
+        document.getElementById("particleCanvas");
+
+    const ctx =
+        canvas.getContext("2d");
+
+    let particles = [];
+
+
+    function resizeCanvas() {
+
+        canvas.width =
+            window.innerWidth;
+
+        canvas.height =
+            window.innerHeight;
+    }
+
+
+    window.addEventListener(
+        "resize",
+        resizeCanvas
+    );
+
+
+    resizeCanvas();
+
+
+
+    function createParticle() {
+
+        return {
+
+            x:
+                Math.random() *
+                canvas.width,
+
+            y:
+                Math.random() *
+                canvas.height,
+
+            size:
+                Math.random() * 2 + 0.4,
+
+            speed:
+                Math.random() * 0.25 + 0.05,
+
+            drift:
+                (Math.random() - 0.5) * 0.15,
+
+            opacity:
+                Math.random() * 0.45 + 0.1
+
+        };
+
+    }
+
+
+    const particleCount =
+        window.innerWidth < 600
+            ? 45
+            : 80;
+
+
+    for (
+        let i = 0;
+        i < particleCount;
+        i++
+    ) {
+
+        particles.push(
+            createParticle()
+        );
+
+    }
+
+
+    function animateParticles() {
+
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+
+        particles.forEach(p => {
+
+            p.y -= p.speed;
+
+            p.x += p.drift;
+
+
+            if (p.y < -10) {
+
+                p.y =
+                    canvas.height + 10;
+
+                p.x =
+                    Math.random() *
+                    canvas.width;
+            }
+
+
+            if (p.x < -10) {
+
+                p.x =
+                    canvas.width + 10;
+
+            }
+
+
+            if (p.x > canvas.width + 10) {
+
+                p.x = -10;
+
+            }
+
+
+            ctx.beginPath();
+
+            ctx.arc(
+                p.x,
+                p.y,
+                p.size,
+                0,
+                Math.PI * 2
+            );
+
+
+            ctx.fillStyle =
+                `rgba(205, 190, 220, ${p.opacity})`;
+
+
+            ctx.fill();
+
+        });
+
+
+        requestAnimationFrame(
+            animateParticles
+        );
+
+    }
+
+
+    animateParticles();
+
+
+
+
+    function createHeartBurst() {
+
+        const symbols =
+            ["♡", "✦", "·", "✧"];
+
+        for (
+            let i = 0;
+            i < 18;
+            i++
+        ) {
+
+            const heart =
+                document.createElement("div");
+
+            heart.textContent =
+                symbols[
+                    Math.floor(
+                        Math.random() *
+                        symbols.length
+                    )
+                ];
+
+
+            heart.style.position =
+                "fixed";
+
+            heart.style.left =
+                "50%";
+
+            heart.style.top =
+                "65%";
+
+            heart.style.zIndex =
+                "200";
+
+            heart.style.pointerEvents =
+                "none";
+
+            heart.style.fontSize =
+                `${Math.random() * 16 + 12}px`;
+
+            heart.style.color =
+                "rgba(210, 195, 220, 0.8)";
+
+
+            document.body.appendChild(
+                heart
+            );
+
+
+            const x =
+                (Math.random() - 0.5) * 300;
+
+            const y =
+                -(Math.random() * 250 + 100);
+
+
+            heart.animate(
+                [
+                    {
+                        transform:
+                            "translate(-50%, -50%) scale(0.5)",
+
+                        opacity: 0
+                    },
+
+                    {
+                        transform:
+                            "translate(-50%, -50%) scale(1)",
+
+                        opacity: 1,
+
+                        offset: 0.25
+                    },
+
+                    {
+                        transform:
+                            `translate(
+                                calc(-50% + ${x}px),
+                                calc(-50% + ${y}px)
+                            ) scale(0.7)`,
+
+                        opacity: 0
+                    }
+                ],
+                {
+                    duration:
+                        1800 + Math.random() * 700,
+
+                    easing:
+                        "cubic-bezier(.2,.7,.3,1)"
+                }
+            );
+
+
+            setTimeout(() => {
+
+                heart.remove();
+
+            }, 2600);
+
+        }
+
+    }
+
+</script>
+
+</body>
+</html>
